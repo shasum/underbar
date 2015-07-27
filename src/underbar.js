@@ -55,7 +55,7 @@
     else {
       for (var key in collection)
         iterator(collection[key], key, collection);
-    };
+    }
     
   };
 
@@ -78,12 +78,23 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var passed = [];
+    for (var i=0; i<collection.length; i++) {
+      if (test(collection[i])) {
+        passed.push(collection[i]);
+      }
+    }
+    return passed;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var filtered = _.filter(collection, test);
+    return _.filter(collection, function(i) {
+      return _.indexOf(filtered, i) < 0;
+    });
   };
 
   // Produce a duplicate-free version of the array.
