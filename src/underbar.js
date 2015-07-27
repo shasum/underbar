@@ -92,13 +92,20 @@
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     var filtered = _.filter(collection, test);
-    return _.filter(collection, function(i) {
-      return _.indexOf(filtered, i) < 0;
+    return _.filter(collection, function(item) {
+      return _.indexOf(filtered, item) < 0;
     });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var result = [];
+    _.each(array, function(item) {
+      if (_.indexOf(result, item) < 0) {
+        result.push(item);
+      }
+    });
+    return result;
   };
 
 
