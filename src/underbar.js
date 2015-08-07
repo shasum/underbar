@@ -79,11 +79,10 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var passed = [];
-    for (var i=0; i<collection.length; i++) {
-      if (test(collection[i])) {
-        passed.push(collection[i]);
-      }
-    }
+    _.each(collection, function(item) {
+      if (test(item))
+        passed.push(item);
+    });
     return passed;
   };
 
@@ -115,8 +114,9 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var result = [];
-    for (var i=0; i<collection.length; i++)
-      result.push(iterator(collection[i]));
+    _.each(collection, function(item) {
+      result.push(iterator(item));
+    });
     return result;
   };
 
@@ -314,7 +314,7 @@
     var args=[];
     for (var i=2; i<arguments.length; i++)
       args.push(arguments[i]);
-    setTimeout(function() {
+    return setTimeout(function() {
      func.apply(this, args);
     }, wait);
   };
@@ -353,6 +353,9 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return _.map(collection, function(element) {
+      return ((typeof functionOrKey === 'function') ? functionOrKey : element[functionOrKey]).apply(element,args);
+    });
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -360,6 +363,20 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    if (typeof iterator === 'function')
+      return collection.sort(function(a, b){
+        if (iterator(a) > iterator(b))
+          return 1;
+        else
+          return 0;
+      });
+    else if (typeof iterator === 'string')
+      return collection.sort(function(a, b){
+        if (a[iterator] > b[iterator])
+          return 1;
+        else
+          return 0;
+      });
   };
 
   // Zip together two or more arrays with elements of the same index
